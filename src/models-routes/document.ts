@@ -1,8 +1,12 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { PrismaClient, Document} from '@prisma/client';
-
+import AWS from 'aws-sdk';
 const prisma = new PrismaClient();
-
+const s3 = new AWS.S3({
+  accessKeyId: 'AKIAZ4SOIJYNJVJN4RHC',
+  secretAccessKey: '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',
+  region: 'eu-west-3'
+});
 export async function documents(app: FastifyInstance) {
   
   app.post('/documents', async (request: FastifyRequest<{ Body: Document }>, reply: FastifyReply) => {
@@ -33,6 +37,13 @@ export async function documents(app: FastifyInstance) {
           }
         })
       }
+      const s3Params = {
+        Bucket: 'davidedms',
+        Key: `${document.repository}/${document.nome}`,
+        Body: Buffer.from(JSON.stringify(document), 'utf-8'),
+      };
+      await s3.upload(s3Params).promise();
+      reply.send('File caricato con successo')
       reply.send(document);
     } catch (error) {
       console.error('Errore nella creazione del documento:', error);
@@ -58,6 +69,15 @@ export async function documents(app: FastifyInstance) {
         reply.code(404).send('Document non trovato');
         return;
       }
+      const s3Params = {
+        Bucket: 'davidedms',
+        Key: `${document.repository}/${document.nome}`,
+        Expires: 180,
+      };
+
+      const signedUrl = await s3.getSignedUrlPromise('getObject', s3Params);
+
+      reply.send({ signedUrl });
       reply.send(document);
     } catch (error) {
       console.error('Errore nel recupero del documento:', error);

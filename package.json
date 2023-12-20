@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "NODE_ENV=development && tsc watch --inspect=9320 app.ts",
+    "dev": "tsx watch --inspect=9320 app.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc -p tsconfig.json",
     "start": "node app.js"
@@ -20,6 +20,7 @@
     "mercurius": "^13.3.2",
     "mongodb": "^6.3.0",
     "prisma": "^5.7.0",
+    "tsx": "^4.7.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
