@@ -17,7 +17,7 @@ async function getSignedUrl(app) {
         try {
             const s3Params = {
                 Bucket: 'davidedms',
-                Key: 'documents/',
+                Key: 'documents/documento con collegamenti',
                 Expires: 180,
             };
             const signedUrl = await s3.getSignedUrlPromise('getObject', s3Params);

@@ -53,7 +53,7 @@ async function documents(app) {
                 where: { id }
             });
             if (!document) {
-                reply.code(404).send('Document not found');
+                reply.code(404).send('Document non trovato');
                 return;
             }
             reply.send(document);

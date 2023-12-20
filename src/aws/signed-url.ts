@@ -15,7 +15,7 @@ export async function getSignedUrl(app: FastifyInstance) {
       
       const s3Params = {
         Bucket: 'davidedms',
-        Key: 'documents/',
+        Key: 'documents/documento con collegamenti',
         Expires: 180,
       };
 

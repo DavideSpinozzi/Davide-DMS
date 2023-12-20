@@ -23,6 +23,16 @@ async function folders(app) {
                     path: fullPath,
                 },
             });
+            if (folder.folderMadreId) {
+                await prisma.folder.update({
+                    where: { id: folder.folderMadreId },
+                    data: {
+                        subfolders: {
+                            connect: { id: folder.id },
+                        }
+                    }
+                });
+            }
             reply.send(folder);
         }
         catch (error) {
@@ -45,7 +55,7 @@ async function folders(app) {
                 where: { id }
             });
             if (!folder) {
-                reply.code(404).send('Folder not found');
+                reply.code(404).send('Folder non trovata');
                 return;
             }
             reply.send(folder);
@@ -62,7 +72,7 @@ async function folders(app) {
                 where: { id },
             });
             if (!folder) {
-                reply.code(404).send('Folder not found');
+                reply.code(404).send('Folder non trovata');
                 return;
             }
             let fullPath = folder.path;

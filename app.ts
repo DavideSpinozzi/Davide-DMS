@@ -3,8 +3,10 @@ import { tags } from './src/models-routes/tag';
 import { folders } from './src/models-routes/folder';
 import { documents } from './src/models-routes/document';
 import { getSignedUrl } from './src/aws/signed-url';
+import { uploadToS3 } from './src/aws/signed-url-upload';
 
 const server = fastify()
+server.register(uploadToS3)
 server.register(getSignedUrl)
 server.register(documents)
 server.register(folders)
