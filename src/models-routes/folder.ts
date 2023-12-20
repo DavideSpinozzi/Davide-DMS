@@ -17,7 +17,8 @@ export async function folders(app: FastifyInstance) {
 
         if (folderMadre) {
           fullPath = folderMadre.path;
-        }
+        
+              }
       }
 
       fullPath = `${fullPath}/${folderData.nome}`;
@@ -28,6 +29,17 @@ export async function folders(app: FastifyInstance) {
           path: fullPath,
         },
       });
+       if(folder.folderMadreId){
+        await prisma.folder.update({
+                where:{ id: folder.folderMadreId},
+                data:{
+                  subfolders:{
+                    connect: { id: folder.id },
+                  }
+                }
+                })
+       }
+
       reply.send(folder);
     } catch (error) {
       console.error('Errore nella creazione della cartella:', error);
@@ -82,6 +94,7 @@ export async function folders(app: FastifyInstance) {
 
             if (folderMadre) {
                 fullPath = folderMadre.path;
+                
             }
         }
 
