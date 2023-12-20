@@ -1,0 +1,50 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Tag {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  nome        String
+  hidden      Boolean    @default(false)
+  documentIDs String[]   @db.ObjectId
+  documents   Document[] @relation(fields: [documentIDs], references: [id])
+  userId      String?
+  createdAt   DateTime?  @default(now())
+  updatedAt   DateTime?  @updatedAt
+}
+
+model Folder {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  nome          String
+  path          String
+  folderMadreId String?   @db.ObjectId
+  folderMadre   Folder?   @relation("Subfolders", fields: [folderMadreId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  subfolders    Folder[]  @relation("Subfolders")
+  documentIDs   String[]  @db.ObjectId
+  documents     Document[]  @relation(fields: [documentIDs], references: [id])
+  userId        String?
+  createdAt     DateTime? @default(now())
+  updatedAt     DateTime? @updatedAt
+}
+
+model Document {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  nome        String
+  descrizione String?
+  repository  String
+  tagIDs      String[]   @db.ObjectId
+  tags        Tag[]      @relation(fields: [tagIDs], references: [id])
+  folderIDs   String[]   @db.ObjectId
+  folders     Folder[] @relation(fields: [folderIDs], references: [id])
+  userId      String?
+  createdAt   DateTime?  @default(now())
+  updatedAt   DateTime?  @updatedAt
+}
